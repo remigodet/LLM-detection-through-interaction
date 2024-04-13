@@ -2,7 +2,7 @@ import prompts
 from llm import get_completion
 import numpy as np
 
-N_VICTIM_AGENTS = 5
+N_VICTIM_AGENTS = 3
 N_ROGUE_AGENTS = 1
 N_ROUNDS = 2
 
@@ -46,7 +46,7 @@ def main():
         
     
     # round robin loop 
-    print(round_robin_policy(all_agents))
+    # print(round_robin_policy(all_agents))
     for r in range(N_ROUNDS):
         # comparisons 
         for judge,agent1,agent2 in round_robin_policy(all_agents):
