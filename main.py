@@ -1,8 +1,8 @@
 import prompts
-from llm import get_completion
+from llm import get_completion, print_cost
 import numpy as np
 
-N_VICTIM_AGENTS = 5
+N_VICTIM_AGENTS = 2
 N_ROGUE_AGENTS = 1
 N_ROUNDS = 2
 
@@ -10,14 +10,21 @@ class Agent():
     def __init__(self, id, victim:bool) -> None:
         self.id = id
         self.victim = victim
-        self.memory = []
-        self.judgments = []
+        self.memory = [] # stores the latest performances 
+        self.judgments = [] # stores judgments
+        self.engine = "gpt-3.5-turbo"
+        self.agent_prompt = "You are a chat assistant" # TODO change this to a better prompt 
+        
     def completion(self, prompt, judgment=False):
-        completion = get_completion(prompt)
+        completion = get_completion(agent_prompt=self.agent_prompt, prompt=prompt, engine= self.engine, debug=True)
         #
+        print("========================================")
         print(self.id)
+        print("---")
         print(prompt)
+        print("->")
         print(completion)
+        print("========================================")
         # 
         if judgment:
             self.judgments.append(completion)
@@ -31,7 +38,9 @@ def round_robin_policy(all_agents):
     '''
     Must return a list of triplets (judge, agent1, agent2)
     '''
-    return [(all_agents[1],all_agents[2],all_agents[3]),(all_agents[3],all_agents[2],all_agents[1])]
+    from itertools import permutations
+    # TODO round robin can depend on performance of previous round ? 
+    return list(permutations(all_agents))
 
 def main():
     
@@ -46,7 +55,7 @@ def main():
         
     
     # round robin loop 
-    print(round_robin_policy(all_agents))
+    # print(round_robin_policy(all_agents))
     for r in range(N_ROUNDS):
         # comparisons 
         for judge,agent1,agent2 in round_robin_policy(all_agents):
@@ -54,23 +63,26 @@ def main():
             comparison_prompt = prompts.comparison_prompt(judge, agent1, agent2)
             
             judge.completion(comparison_prompt, judgment=True)
-            # comparsion metrics -> who won ? 
+            # comparison metrics -> who won ? 
+    # store the judgment for summary -> dict for all agents ?
+        # cost 
+        print_cost()
+        
         # improvements 
         summary = " $$ This is a random summary $$"
         to_improve = np.random.choice(all_agents, 2)
         for agent in to_improve:
             improvement_prompt = prompts.improvement_prompt(summary, agent)
             agent.completion(improvement_prompt)
-        
-        
-            
-            
     
+    # final vote -> just use comparison metrics 
+    # save everything ! 
+        
     
     
 main()
 
-# prompts
+# prompts 
 # better RR policy (random)
 # summarize
 # vote
