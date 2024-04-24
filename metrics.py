@@ -28,7 +28,7 @@ def process_summaries(_summary_dict, all_agents):
     for i in to_improve:
         assert i >= 0
         assert i < len(all_agents)
-    summaries = [random.sample(arguments[i],1) for i in to_improve]
+    summaries = [random.sample(arguments[i],1)[0] for i in to_improve]
                 
     print(to_improve)     
     return to_improve, summaries
