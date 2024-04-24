@@ -4,7 +4,7 @@ client = OpenAI()
 token_usage = {"completion_tokens":0, "prompt_tokens":0}
 model_cost = {"gpt-4": (0.03,0.06), "gpt-4-turbo": (0.01, 0.03), "gpt-3.5-turbo": (0.0005,0.0015)}
 cost = 0
-def get_completion(agent_prompt, prompt, engine, debug=True):
+def get_completion(agent_prompt, prompt, engine, debug=False):
     '''
     Returns a completion for the given prompts
     '''
@@ -17,7 +17,9 @@ def get_completion(agent_prompt, prompt, engine, debug=True):
     ]
     if debug:
         return "$$ LLM COMPLETION $$"
+    # OPEN AI call
     completion = client.chat.completions.create(messages=messages, model=engine, temperature=0)
+    
     # print(completion)
     token_usage["completion_tokens"] += completion.usage.completion_tokens
     token_usage["prompt_tokens"] += completion.usage.prompt_tokens
@@ -26,7 +28,7 @@ def get_completion(agent_prompt, prompt, engine, debug=True):
     
     
     print_cost()
-    return completion.choices[0].message
+    return completion.choices[0].message.content
     
 def print_cost():
     print(token_usage)
