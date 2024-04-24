@@ -98,12 +98,6 @@ print("Final cost")
 print_cost()
 
 # TODO (in order)
-
-# comparion metrics -> MVP = decide winner binary 
-# summarize -> MVP -> sample one or two judgments 
-
-# working loop MVP 
-
 # save everything
 # vote
 
