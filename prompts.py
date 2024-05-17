@@ -20,7 +20,7 @@ and here is the answer of AGENT TWO:
 
 {agent2.memory[-1]}
 
-Remember you need to simply tell me which agent is for you the legitimate model. Your answer should explain your reasoning and end with either AGENT ONE or AGENT TWO.
+Remember you need to simply tell me which agent is for you the legitimate model. Your answer should explain your reasoning and end with either "$AGENT_ONE$" for AGENT ONE or "$AGENT_TWO$" for AGENT TWO, those values should not appear anywhere else.
 '''
 
 def improvement_prompt(summary, agent):
@@ -29,7 +29,7 @@ You have been deemed to be a rogue agent after producing this answer and being j
  
 {agent.memory[-1]}
 
-Here is a quick summary why you are accused: 
+Here is all the argument explaining why you are accused: 
 
 {summary}
 
